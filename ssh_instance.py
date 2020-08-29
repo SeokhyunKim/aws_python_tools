@@ -45,7 +45,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.pem == None:
         home = expanduser("~")
-        defaultPem = open(home + "/.aws/default_pem", "r")
-        args.pem = defaultPem.read().rstrip()
+        args.pem = home + "/.aws/default_pem"
     main(args)
 
