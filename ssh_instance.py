@@ -7,7 +7,7 @@ from tabulate import tabulate
 from os.path import expanduser
 
 def ec2DescribeInstancesAsJson():
-    stream = os.popen('aws2 ec2 describe-instances')
+    stream = os.popen('aws ec2 describe-instances')
     output = stream.read()
     return json.loads(output)
 
