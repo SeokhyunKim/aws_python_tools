@@ -30,7 +30,10 @@ def main(args):
     jsonInstances = ec2DescribeInstancesAsJson()
     hosts = getHosts(jsonInstances)
     printHosts(hosts)
-    hostIdx = int(input("Type host id to ssh: "))
+    hostIdx = int(input("Type host id to ssh (-1 to quit): "))
+    if hostIdx < 0:
+        print("bye")
+        return
     publicIp = hosts[hostIdx][3] # 3 is the index of PublicIpAddress
     sshCmd = "ssh -i " + args.pem + " ec2-user@" + publicIp
     print("ssh command: " + sshCmd)
