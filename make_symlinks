@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+read -p 'Target directory: ' target_directory
+TARGET_DIRECTORY="${target_directory/#\~/$HOME}"
+echo Making symbolic links under $TARGET_DIRECTORY
+
+for pyfile in `ls *.py`
+do
+    ln -s `pwd`/${pyfile} ${TARGET_DIRECTORY}/${pyfile}
+    ls -l ${TARGET_DIRECTORY}/${pyfile}
+done
