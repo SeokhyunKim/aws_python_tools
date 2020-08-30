@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
-import ssh_instance
+import shared_fns
 
-jsonInstances = ssh_instance.ec2DescribeInstancesAsJson()
-hosts = ssh_instance.getHosts(jsonInstances)
-ssh_instance.printHosts(hosts)
+jsonInstances = shared_fns.describeInstances()
+hosts = shared_fns.getHosts(jsonInstances,
+            ["pending", "running", "stopping", "stopped", "shutting-down", "terminated"])
+shared_fns.printTable(hosts,
+        ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
+

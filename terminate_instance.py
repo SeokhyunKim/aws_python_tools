@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 
 import os
-import ssh_instance
+import shared_fns
 
 def main():
-    jsonInstances = ssh_instance.ec2DescribeInstancesAsJson()
-    hosts = ssh_instance.getHosts(jsonInstances)
-    ssh_instance.printHosts(hosts)
-    hostIdx = int(input("Type host id to terminate (-1 to quit): "))
-    if hostIdx < 0:
+    jsonInstances = shared_fns.describeInstances()
+    hosts = shared_fns.getHosts(jsonInstances,
+                ["pending", "running", "stopping", "stopped", "shutting-down", "terminated"])
+
+    shared_fns.printTable(hosts,
+            ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
+    hostIds = shared_fns.getHostIdsInput("Type host id to terminate (-1 to quit):")
+    if not hostIds:
         print("bye")
         return
-    instanceId = hosts[hostIdx][1] 
-    sshCmd = "aws ec2 terminate-instances --instance-ids " + instanceId
+    instanceIds = ""
+    for hostId in hostIds:
+        instanceIds += hosts[hostId][1] + " "
+    sshCmd = "aws ec2 terminate-instances --instance-ids " + instanceIds
     print("ssh command: " + sshCmd)
     os.system(sshCmd)
 

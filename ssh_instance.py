@@ -1,35 +1,15 @@
 #!/usr/bin/env python3
 
 import os
-import json
+import shared_fns
 import argparse
-from tabulate import tabulate
 from os.path import expanduser
 
-def ec2DescribeInstancesAsJson():
-    stream = os.popen('aws ec2 describe-instances')
-    output = stream.read()
-    return json.loads(output)
-
-def getHosts(jsonInstances):
-    hosts = []
-    id = 0
-    for reservation in jsonInstances["Reservations"]:
-        for instance in reservation["Instances"]:
-            if 'PublicIpAddress' in instance:
-                hosts.append([id, instance["InstanceId"], instance["State"]["Name"],
-                            instance["PublicIpAddress"], instance["PrivateIpAddress"]])
-                id += 1
-    return hosts
-
-def printHosts(hosts):
-    headers = ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"]
-    print(tabulate(hosts, headers=headers))
-
 def main(args):
-    jsonInstances = ec2DescribeInstancesAsJson()
-    hosts = getHosts(jsonInstances)
-    printHosts(hosts)
+    jsonInstances = shared_fns.describeInstances()
+    hosts = shared_fns.getHosts(jsonInstances)
+    shared_fns.printTable(hosts,
+                ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
     hostIdx = int(input("Type host id to ssh (-1 to quit): "))
     if hostIdx < 0:
         print("bye")
