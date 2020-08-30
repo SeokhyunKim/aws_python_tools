@@ -25,6 +25,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.pem == None:
         home = expanduser("~")
-        args.pem = home + "/.aws/default_pem"
+        args.pem = home + "/.aws/default.pem"
     main(args)
 

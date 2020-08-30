@@ -10,7 +10,7 @@ def main():
 
     shared_fns.printTable(hosts,
             ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
-    hostIds = shared_fns.getHostIdsInput("Type host id to terminate (-1 to quit):")
+    hostIds = shared_fns.getHostIdsInput("Type host ids to terminate\n(separated by space. -1 to quit):")
     if not hostIds:
         print("bye")
         return

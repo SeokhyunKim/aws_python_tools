@@ -51,7 +51,6 @@ def printTable(tabulatingArray, headers):
 def getHostIdsInput(guideText):
     inputString = input(guideText + " ")
     hostIdStrings = inputString.split(" ")
-    print(hostIdStrings)
     hostIds = []
     for hostIdStr in hostIdStrings:
         hostId = int(hostIdStr)
