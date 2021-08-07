@@ -8,7 +8,10 @@ def make_array_for_tabulating(keys, json_object_array):
         tabulate_item.append(id)
         id += 1
         for key in keys:
-            tabulate_item.append(json_obj[key])
+            if key in json_obj.keys():
+                tabulate_item.append(json_obj[key])
+            else:
+                tabulate_item.append("")
         tabulate_ary.append(tabulate_item)
     return tabulate_ary
 

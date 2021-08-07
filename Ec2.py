@@ -1,4 +1,3 @@
-import os
 import boto3
 import tabulate_fns
 
@@ -8,8 +7,9 @@ class Ec2:
 
     def get_launch_template_list(self):
         launch_templates = self.ec2.describe_launch_templates()
+        #print(launch_templates)
         return tabulate_fns.make_array_for_tabulating(
-            keys=["LaunchTemplateId", "LaunchTemplateName", "DefaultVersionNumber"],
+            keys=["LaunchTemplateId", "LaunchTemplateName", "DefaultVersionNumber", "Tags"],
             json_object_array=launch_templates["LaunchTemplates"])
 
     def print_launch_template_list(self, launch_template_list = None):
@@ -17,7 +17,7 @@ class Ec2:
             launch_template_list = self.get_launch_template_list()
         tabulate_fns.print_tabulating_array(
             launch_template_list,
-            headers=["Id", "LaunchTemplateId", "LaunchTemplateName", "DefaultVersion"])
+            headers=["Id", "LaunchTemplateId", "LaunchTemplateName", "DefaultVersion", "Tags"])
 
     def get_instance_list(self, state_filters=["running"]):
         instances_json = self.ec2.describe_instances()
@@ -29,12 +29,18 @@ class Ec2:
                 if state in state_filters:
                     publicIpAddress = ''
                     privateIpAddress = ''
+                    node_role = ''
                     if 'PublicIpAddress' in instance:
                         publicIpAddress = instance["PublicIpAddress"]
                     if 'PrivateIpAddress' in instance:
                         privateIpAddress = instance["PrivateIpAddress"]
+                    if 'Tags' in instance:
+                        for tag in instance["Tags"]:
+                            if tag["Key"] == 'node_role':
+                                node_role = tag["Value"]
                     hosts.append([id, instance["InstanceId"], instance["State"]["Name"],
-                                  publicIpAddress, privateIpAddress])
+                                  publicIpAddress, privateIpAddress, node_role])
+
                     id += 1
         return hosts
 
@@ -43,7 +49,7 @@ class Ec2:
             instance_list = self.get_instance_list()
         tabulate_fns.print_tabulating_array(
             instance_list,
-            ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
+            ["Id", "InstanceId", "State", "PublicIp", "PrivateIp", "NodeRole"])
 
     def start_instances(self, instance_ids):
         self.ec2.start_instances(InstanceIds = instance_ids)
