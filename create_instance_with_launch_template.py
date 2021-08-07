@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 
 import os
-import shared_fns
-    
+from Ec2 import Ec2
+
 def main():
-    launchTemplatesJson = shared_fns.describeLaunchTemplates()
-    launchTemplates = shared_fns.makeArrayForTabulating(keys=["LaunchTemplateId", "LaunchTemplateName", "DefaultVersionNumber"],
-                                                        jsonObjectArray = launchTemplatesJson["LaunchTemplates"])
-    shared_fns.printTable(launchTemplates, ["Id", "LaunchTemplateId", "LaunchTemplateName", "DefaultVersion"])
-    templateIdx = int(input("Type launch-template id to create an instance (-1 to quit): "))
-    if templateIdx < 0:
+    ec2 = Ec2()
+    launch_template_list = ec2.get_launch_template_list()
+    ec2.print_launch_template_list(launch_template_list)
+    template_idx = int(input("Type launch-template id to create an instance (-1 to quit): "))
+    if template_idx < 0:
         print("bye")
         return
-    launchTemplateId = launchTemplates[templateIdx][1]
-    sshCmd = "aws ec2 run-instances --launch-template LaunchTemplateId=" + launchTemplateId
-    print("command: " + sshCmd)
+    launch_template_id = launch_template_list[template_idx][1]
+    # Looks like boto3 does not provide instance creation with template-id
+    sshCmd = "aws ec2 run-instances --launch-template LaunchTemplateId=" + launch_template_id
+    # print("command: " + sshCmd)
     os.system(sshCmd)
-    
+
 if __name__ == "__main__":
     main()

@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 
 import os
-import shared_fns
+from Ec2 import Ec2
 import argparse
 from os.path import expanduser
 
 def main(args):
-    jsonInstances = shared_fns.describeInstances()
-    hosts = shared_fns.getHosts(jsonInstances)
-    shared_fns.printTable(hosts,
-                ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
-    hostIdx = int(input("Type host id to ssh (-1 to quit): "))
-    if hostIdx < 0:
+    ec2 = Ec2()
+    instance_list = ec2.get_instance_list(["running"])
+    ec2.print_instance_list(instance_list)
+    host_idx = int(input("Type host id to ssh (-1 to quit): "))
+    if host_idx < 0:
         print("bye")
         return
-    publicIp = hosts[hostIdx][3] # 3 is the index of PublicIpAddress
-    sshCmd = "ssh -i " + args.pem + " ec2-user@" + publicIp
-    print("ssh command: " + sshCmd)
-    os.system(sshCmd)
+    public_ip = instance_list[host_idx][3] # 3 is the index of PublicIpAddress
+    ssh_cmd = "ssh -i " + args.pem + " ec2-user@" + public_ip
+    #print("ssh command: " + ssh_cmd)
+    os.system(ssh_cmd)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='designate a pem file')

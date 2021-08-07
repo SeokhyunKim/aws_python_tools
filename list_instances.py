@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-import shared_fns
+from Ec2 import Ec2
 
-jsonInstances = shared_fns.describeInstances()
-hosts = shared_fns.getHosts(jsonInstances,
-            ["pending", "running", "stopping", "stopped", "shutting-down", "terminated"])
-shared_fns.printTable(hosts,
-        ["Id", "InstanceId", "State", "PublicIp", "PrivateIp"])
-
+ec2 = Ec2()
+instance_list = ec2.get_instance_list(
+    ["pending", "running", "stopping", "stopped", "shutting-down", "terminated"])
+ec2.print_instance_list(instance_list)
