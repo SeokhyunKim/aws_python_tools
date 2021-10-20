@@ -29,17 +29,12 @@ class Ec2:
                 if state in state_filters:
                     publicIpAddress = ''
                     privateIpAddress = ''
-                    node_role = ''
                     if 'PublicIpAddress' in instance:
                         publicIpAddress = instance["PublicIpAddress"]
                     if 'PrivateIpAddress' in instance:
                         privateIpAddress = instance["PrivateIpAddress"]
-                    if 'Tags' in instance:
-                        for tag in instance["Tags"]:
-                            if tag["Key"] == 'node_role':
-                                node_role = tag["Value"]
-                    hosts.append([id, instance["InstanceId"], instance["State"]["Name"],
-                                  publicIpAddress, privateIpAddress, node_role])
+                    hosts.append([id, instance["InstanceId"], instance["KeyName"], instance["State"]["Name"],
+                                  publicIpAddress, privateIpAddress])
 
                     id += 1
         return hosts
@@ -49,7 +44,7 @@ class Ec2:
             instance_list = self.get_instance_list()
         tabulate_fns.print_tabulating_array(
             instance_list,
-            ["Id", "InstanceId", "State", "PublicIp", "PrivateIp", "NodeRole"])
+            ["Id", "InstanceId", "Name", "State", "PublicIp", "PrivateIp"])
 
     def start_instances(self, instance_ids):
         self.ec2.start_instances(InstanceIds = instance_ids)
