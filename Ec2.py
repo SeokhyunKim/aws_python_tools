@@ -47,7 +47,9 @@ class Ec2:
             ["Id", "InstanceId", "Name", "State", "PublicIp", "PrivateIp"])
 
     def start_instances(self, instance_ids):
-        self.ec2.start_instances(InstanceIds = instance_ids)
+        print("To start these instances, open Ec2.py and activate start_instance command: " + instance_ids)
+        #self.ec2.start_instances(InstanceIds = instance_ids)
 
     def stop_instances(self, instance_ids):
-        self.ec2.stop_instances(InstanceIds = instance_ids)
+        print("To start these instances, open Ec2.py and activate start_instance command: " + instance_ids)
+        #self.ec2.stop_instances(InstanceIds = instance_ids)

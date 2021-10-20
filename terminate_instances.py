@@ -18,7 +18,8 @@ def main():
         instanceIds += instance_list[hostId][1] + " "
     sshCmd = "aws ec2 terminate-instances --instance-ids " + instanceIds
     #print("ssh command: " + sshCmd)
-    os.system(sshCmd)
+    print("To terminate these instances, open terminate_instance.py and activate start_instance command: " + instanceIds)
+    #os.system(sshCmd)
 
 if __name__ == "__main__":
     main()
